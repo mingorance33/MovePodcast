@@ -10,6 +10,11 @@
 
 @interface ViewController : NSViewController
 
+@property (weak) IBOutlet NSButton *AbreDirectorio;
+
+
+- (IBAction)AbreDirectorio:(id)sender;
+
 
 @end
 
