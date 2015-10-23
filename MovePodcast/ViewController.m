@@ -38,7 +38,7 @@
 
 
 // Obtenemos la fecha formateada
-- (NSString *)extraeFecha:(NSDictionary *)attrs {
+- (NSString *)formatFecha:(NSDictionary *)attrs {
     
     NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
     
@@ -49,6 +49,17 @@
     NSString *formattedDateString = [dateFormatter stringFromDate:date];
     
     return formattedDateString;
+}
+// Creación de directorios
+-(void)createDirectory:(NSString *)directoryName atFilePath:(NSString *)filePath
+{
+    NSString *filePathAndDirectory = [filePath stringByAppendingPathComponent:directoryName];
+    NSFileManager *filemgr;
+    
+    filemgr = [NSFileManager defaultManager];
+    
+    [filemgr createDirectoryAtPath:filePathAndDirectory  withIntermediateDirectories:NO attributes: nil error:nil];
+    
 }
 
 // Subdirectorios
@@ -64,7 +75,7 @@
     int j;
     
     ruta = [[url path] stringByAppendingPathComponent:[filelist objectAtIndex: i]];
-    NSLog(@"%@",ruta);
+    // NSLog(@"%@",ruta);
     
     
     filelist1 = [filemgr contentsOfDirectoryAtPath: ruta  error: nil];
@@ -92,19 +103,27 @@
             NSString *file = [filelist1 objectAtIndex: j];
             NSString *path = ruta;
             NSString *sepr = @"/";
+            NSString *exts = file.pathExtension;
             NSString *str = [NSString stringWithFormat: @"%@%@%@", path,sepr,file];
             
             NSDictionary* attrs = [fm attributesOfItemAtPath:str error:nil];
             
-            if (attrs != nil) {
+            if (attrs != nil && ![exts  isEqual: @""]) {
                 
-                NSString *YearMoth = [self extraeFecha:attrs];
-                NSLog(@"formattedDateString: %@", YearMoth);
+                NSString *YearMoth = [self formatFecha:attrs];
+                //NSLog(@"formattedDateString: %@", YearMoth);
+                
+                // Creacion de la carpeta
+                NSString *newFolder = [NSString stringWithFormat: @"%@%@%@", path,sepr,YearMoth];
+                
+                NSLog(@"formattedDateString: %@", newFolder);
+                
+                [self createDirectory:YearMoth atFilePath:path];
             }
             else {
                 NSLog(@"Not found");
             }
-            // Crear carpeta a partir de aqui
+            
             // Moverlos a la carpeta nueva
         }
     }
