@@ -50,16 +50,33 @@
     
     return formattedDateString;
 }
+
 // Creación de directorios
 -(void)createDirectory:(NSString *)directoryName atFilePath:(NSString *)filePath
 {
     NSString *filePathAndDirectory = [filePath stringByAppendingPathComponent:directoryName];
+    
     NSFileManager *filemgr;
     
     filemgr = [NSFileManager defaultManager];
     
     [filemgr createDirectoryAtPath:filePathAndDirectory  withIntermediateDirectories:NO attributes: nil error:nil];
     
+}
+
+// Movimiento de los archivos
+- (void)moveFile:(NSString *)str newFile:(NSString *)newFile {
+    
+    
+    NSFileManager *filemgr;
+    
+    filemgr = [NSFileManager defaultManager];
+    
+    NSURL *oldArchive= [NSURL fileURLWithPath:str];
+    
+    NSURL *newArchive = [NSURL fileURLWithPath:newFile];
+    
+    [filemgr moveItemAtURL: oldArchive toURL: newArchive error: nil];
 }
 
 // Subdirectorios
@@ -81,7 +98,6 @@
     filelist1 = [filemgr contentsOfDirectoryAtPath: ruta  error: nil];
     
     // Convertimos de NSString a NSURL
-    
     NSURL *fileURL = [[NSURL alloc] initFileURLWithPath:ruta];
     
     
@@ -91,7 +107,7 @@
     {
         BOOL isDir;
         
-        // Ahora hay que ver que solo son archivos
+        // Vemos los que solo son archivos
         isDir = [self onlyFolders:j filelist:filelist1 url:fileURL filemgr:filemgr];
         if (!(isDir))
         {
@@ -113,20 +129,35 @@
                 NSString *YearMoth = [self formatFecha:attrs];
                 //NSLog(@"formattedDateString: %@", YearMoth);
                 
-                // Creacion de la carpeta
-                NSString *newFolder = [NSString stringWithFormat: @"%@%@%@", path,sepr,YearMoth];
-                
-                NSLog(@"formattedDateString: %@", newFolder);
-                
+                 // Creacion de la carpeta
                 [self createDirectory:YearMoth atFilePath:path];
+                
+                // Movimiento del archivo a su carpeta correspondiente
+                NSString *newFile = [NSString stringWithFormat: @"%@%@%@%@%@", path,sepr,YearMoth,sepr,file];
+              
+                [self moveFile:str newFile:newFile];
+                
             }
             else {
                 NSLog(@"Not found");
             }
             
-            // Moverlos a la carpeta nueva
+           
         }
     }
+}
+
+- (void)finProceso: (NSString*) cadena  {
+    
+    NSAlert* msgBox = [[NSAlert alloc] init] ;
+    
+    [msgBox setMessageText: cadena];
+    
+    [msgBox addButtonWithTitle: @"OK"];
+    
+    [msgBox runModal];
+    
+    NSLog(@"Fin del proceso");
 }
 
 // Abre panel de seleccion de carpeta
@@ -140,6 +171,7 @@
     NSInteger clicked = [panel runModal];
     
     if (clicked == NSFileHandlingPanelOKButton) {
+        
         for (NSURL *url in [panel URLs]) {
             
             NSFileManager *filemgr;
@@ -169,8 +201,18 @@
                 
             }
         }
-        NSLog(@"Fin");
+        
+        [self finProceso:(@"Proceso finalizado")];
     }
+}
+
+// Boton de salida de la aplicacion
+- (IBAction)exit:(id)sender {
+    
+    [self finProceso:(@"Saliendo de la aplicación")];
+    
+    [NSApp terminate:self];
+    
 }
 
 @end

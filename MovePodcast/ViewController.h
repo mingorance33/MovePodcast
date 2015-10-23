@@ -15,6 +15,7 @@
 
 - (IBAction)AbreDirectorio:(id)sender;
 
+- (IBAction)exit:(id)sender;
 
 @end
 
