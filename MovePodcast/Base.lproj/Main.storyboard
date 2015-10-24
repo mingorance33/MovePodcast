@@ -683,10 +683,10 @@
                                 </buttonCell>
                             </button>
                             <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vWB-DQ-F3l">
-                                <rect key="frame" x="20" y="24" width="122" height="19"/>
+                                <rect key="frame" x="20" y="19" width="122" height="19"/>
                                 <buttonCell key="cell" type="roundRect" title="Salir" bezelStyle="roundedRect" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="jAR-Pq-T6S">
                                     <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
-                                    <font key="font" metaFont="controlContent"/>
+                                    <font key="font" metaFont="cellTitle"/>
                                 </buttonCell>
                                 <connections>
                                     <action selector="exit:" target="XfG-lQ-9wD" id="xgr-4h-h2e"/>
